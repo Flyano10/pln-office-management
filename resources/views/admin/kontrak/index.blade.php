@@ -2,57 +2,53 @@
 
 @section('content')
     <div class="container">
-        <div class="card">
-            <div class="card-header d-flex justify-content-between align-items-center">
-                <h4>Kelola Kontrak</h4>
-                <a href="{{ route('admin.kontrak.create') }}" class="btn btn-primary"><i class="fas fa-plus"></i> Tambah
-                    Kontrak</a>
-            </div>
-            <div class="card-body">
-                @if (session('success'))
-                    <div class="alert alert-success">{{ session('success') }}</div>
-                @endif
-                <table class="table table-striped">
-                    <thead>
-                        <tr>
-                            <th>Gedung</th>
-                            <th>Jenis Kontrak</th>
-                            <th>Periode Mulai</th>
-                            <th>Periode Selesai</th>
-                            <th>Aksi</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @forelse($kontraks as $kontrak)
-                            <tr>
-                                <td>{{ $kontrak->gedung->plnOffice->office_name ?? '-' }}</td>
-                                <td>{{ $kontrak->jenis_kontrak ?? '-' }}</td>
-                                <td>{{ $kontrak->periode_mulai ?? '-' }}</td>
-                                <td>{{ $kontrak->periode_selesai ?? '-' }}</td>
-                                <td>
-                                    <a href="{{ route('admin.kontrak.show', $kontrak) }}" class="btn btn-sm btn-info"><i
-                                            class="fas fa-eye"></i></a>
-                                    <a href="{{ route('admin.kontrak.edit', $kontrak) }}" class="btn btn-sm btn-warning"><i
-                                            class="fas fa-edit"></i></a>
-                                    <form action="{{ route('admin.kontrak.destroy', $kontrak) }}" method="POST"
-                                        class="d-inline" onsubmit="return confirm('Yakin hapus kontrak ini?')">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button class="btn btn-sm btn-danger"><i class="fas fa-trash"></i></button>
-                                    </form>
-                                </td>
-                            </tr>
-                        @empty
-                            <tr>
-                                <td colspan="5" class="text-center">Tidak ada data kontrak</td>
-                            </tr>
-                        @endforelse
-                    </tbody>
-                </table>
-                <div class="d-flex justify-content-center">
-                    {{ $kontraks->links() }}
-                </div>
-            </div>
-        </div>
+        <h1>Daftar Kontrak</h1>
+        <a href="{{ route('admin.kontrak.create') }}" class="btn btn-primary mb-3">Tambah Kontrak</a>
+
+        @if (session('success'))
+            <div class="alert alert-success">{{ session('success') }}</div>
+        @endif
+
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>Nama Perjanjian</th>
+                    <th>Pihak 1</th>
+                    <th>Pihak 2</th>
+                    <th>Tanggal Mulai</th>
+                    <th>Tanggal Selesai</th>
+                    <th>Status</th>
+                    <th>Gedung</th>
+                    <th>Aksi</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach ($kontraks as $kontrak)
+                    <tr>
+                        <td>{{ $kontrak->nama_perjanjian }}</td>
+                        <td>{{ $kontrak->no_perjanjian_pihak1 }}</td>
+                        <td>{{ $kontrak->no_perjanjian_pihak2 }}</td>
+                        <td>{{ $kontrak->tanggal_mulai ? $kontrak->tanggal_mulai->format('d-m-Y') : '-' }}</td>
+                        <td>{{ $kontrak->tanggal_selesai ? $kontrak->tanggal_selesai->format('d-m-Y') : '-' }}</td>
+                        <td>{{ ucfirst($kontrak->status) }}</td>
+                        <td>{{ $kontrak->gedung->nama ?? '-' }}</td>
+                        <td>
+                            <a href="{{ route('admin.realisasi.index', ['kontrak_id' => $kontrak->id]) }}"
+                                class="btn btn-primary btn-sm">Kelola Realisasi</a>
+                            <a href="{{ route('admin.kontrak.edit', $kontrak->id) }}" class="btn btn-warning btn-sm">Edit</a>
+                            <form action="{{ route('admin.kontrak.destroy', $kontrak->id) }}" method="POST"
+                                style="display:inline-block;">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="btn btn-danger btn-sm"
+                                    onclick="return confirm('Yakin ingin menghapus kontrak ini?')">Hapus</button>
+                            </form>
+                        </td>
+                    </tr>
+                @endforeach
+            </tbody>
+        </table>
+
+        {{ $kontraks->links() }}
     </div>
 @endsection

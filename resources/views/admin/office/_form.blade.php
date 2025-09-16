@@ -61,12 +61,9 @@
         <label class="form-label fw-bold">Jenis Kantor <span class="text-danger">*</span></label>
         <select name="office_type" class="form-select @error('office_type') is-invalid @enderror" required>
             <option value="">-- Pilih Jenis Kantor --</option>
-            @foreach ($officeTypes as $key => $label)
-                <option value="{{ $key }}"
-                    {{ old('office_type', $office->office_type ?? '') == $key ? 'selected' : '' }}>
-                    {{ $label }}
-                </option>
-            @endforeach
+            <option value="Kantor Perwakilan" {{ old('office_type', $office->office_type ?? '') == 'Kantor Perwakilan' ? 'selected' : '' }}>Kantor Perwakilan</option>
+            <option value="Kantor Pusat" {{ old('office_type', $office->office_type ?? '') == 'Kantor Pusat' ? 'selected' : '' }}>Kantor Pusat</option>
+            <option value="Kantor SBU" {{ old('office_type', $office->office_type ?? '') == 'Kantor SBU' ? 'selected' : '' }}>Kantor SBU</option>
         </select>
         @error('office_type')
             <div class="invalid-feedback">{{ $message }}</div>
@@ -77,12 +74,9 @@
         <label class="form-label fw-bold">Kantor Induk</label>
         <select name="parent_office" class="form-select">
             <option value="">-- Pilih Kantor Induk (Opsional) --</option>
-            @foreach ($offices as $parent)
-                <option value="{{ $parent->id }}"
-                    {{ old('parent_office', $office->parent_office ?? '') == $parent->id ? 'selected' : '' }}>
-                    {{ $parent->office_name }}
-                </option>
-            @endforeach
+            <option value="Kantor Perwakilan" {{ old('parent_office', $office->parent_office ?? '') == 'Kantor Perwakilan' ? 'selected' : '' }}>Kantor Perwakilan</option>
+            <option value="Kantor Pusat" {{ old('parent_office', $office->parent_office ?? '') == 'Kantor Pusat' ? 'selected' : '' }}>Kantor Pusat</option>
+            <option value="Kantor SBU" {{ old('parent_office', $office->parent_office ?? '') == 'Kantor SBU' ? 'selected' : '' }}>Kantor SBU</option>
         </select>
     </div>
 

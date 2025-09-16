@@ -23,46 +23,67 @@ class KontrakController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'gedung_id' => 'required|exists:gedung,id',
-            'jenis_kontrak' => 'required|in:Sewa,Milik,Hibah,Layanan',
-            'periode_mulai' => 'required|date',
-            'periode_selesai' => 'nullable|date|after_or_equal:periode_mulai',
+            'nama_perjanjian' => 'required|string|max:255',
+            'no_perjanjian_pihak1' => 'required|string|max:255',
+            'no_perjanjian_pihak2' => 'required|string|max:255',
+            'tanggal_mulai' => 'required|date',
+            'tanggal_selesai' => 'required|date|after_or_equal:tanggal_mulai',
+            'sbu' => 'required|string|max:255',
+            'ruang_lingkup' => 'required|string|max:255',
+            'asset_owner' => 'required|string|max:255',
+            'peruntukan' => 'required|in:Kantor SBU,Kantor KP,Gudang',
+            'alamat' => 'required|string',
+            'status' => 'required|in:baru,berjalan,selesai,amandemen',
+            'gedung_id' => 'required|exists:gedungs,id',
         ]);
 
         Kontrak::create($validated);
 
-        // Redirect back to the create page instead of index
-        return redirect()->route('admin.kontrak.create')->with('success', 'Data kontrak berhasil ditambahkan!');
+        return redirect()->route('admin.kontrak.index')->with('success', 'Kontrak berhasil ditambahkan.');
     }
 
-    public function show(Kontrak $kontrak)
+    public function show($id)
     {
+        $kontrak = Kontrak::with('gedung', 'realisasiKontrak')->findOrFail($id);
         return view('admin.kontrak.show', compact('kontrak'));
     }
 
-    public function edit(Kontrak $kontrak)
+    public function edit($id)
     {
+        $kontrak = Kontrak::findOrFail($id);
         $gedungs = Gedung::all();
         return view('admin.kontrak.edit', compact('kontrak', 'gedungs'));
     }
 
-    public function update(Request $request, Kontrak $kontrak)
+    public function update(Request $request, $id)
     {
+        $kontrak = Kontrak::findOrFail($id);
+
         $validated = $request->validate([
-            'gedung_id' => 'required|exists:gedung,id',
-            'nomor_kontrak' => 'required|string|max:255',
+            'nama_perjanjian' => 'required|string|max:255',
+            'no_perjanjian_pihak1' => 'required|string|max:255',
+            'no_perjanjian_pihak2' => 'required|string|max:255',
             'tanggal_mulai' => 'required|date',
-            'tanggal_berakhir' => 'required|date|after_or_equal:tanggal_mulai',
+            'tanggal_selesai' => 'required|date|after_or_equal:tanggal_mulai',
+            'sbu' => 'required|string|max:255',
+            'ruang_lingkup' => 'required|string|max:255',
+            'asset_owner' => 'required|string|max:255',
+            'peruntukan' => 'required|in:Kantor SBU,Kantor KP,Gudang',
+            'alamat' => 'required|string',
+            'status' => 'required|in:baru,berjalan,selesai,amandemen',
+            'gedung_id' => 'required|exists:gedungs,id',
         ]);
 
         $kontrak->update($validated);
 
-        return redirect()->route('admin.kontrak.index')->with('success', 'Data kontrak berhasil diperbarui!');
+        return redirect()->route('admin.kontrak.index')->with('success', 'Kontrak berhasil diperbarui.');
     }
 
-    public function destroy(Kontrak $kontrak)
+    public function destroy($id)
     {
+        $kontrak = Kontrak::findOrFail($id);
         $kontrak->delete();
-        return redirect()->route('admin.kontrak.index')->with('success', 'Data kontrak berhasil dihapus!');
+
+        return redirect()->route('admin.kontrak.index')->with('success', 'Kontrak berhasil dihapus.');
     }
 }

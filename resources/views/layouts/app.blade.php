@@ -1,3 +1,4 @@
+1
 <!doctype html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 
@@ -230,6 +231,10 @@
                             <a class="nav-link {{ request()->routeIs('admin.kontrak.*') ? 'active' : '' }}"
                                 href="{{ route('admin.kontrak.index') }}">
                                 <i class="fas fa-file-contract"></i> Kontrak
+                            </a>
+                            <a class="nav-link d-flex align-items-center {{ request()->routeIs('admin.realisasi.*') ? 'active' : '' }}"
+                                href="{{ route('admin.realisasi.index') }}">
+                                <i class="fas fa-file-alt me-2"></i> Realisasi Kontrak
                             </a>
                             <a class="nav-link {{ request()->routeIs('admin.operasional.*') ? 'active' : '' }}"
                                 href="{{ route('admin.operasional.index') }}">
